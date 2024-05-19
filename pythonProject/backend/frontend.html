@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px; /* Adjusted height */
+        }
+        #buttons {
+            position: absolute;
+            top: 10px;
+            left: 10px; /* Adjusted position */
+            z-index: 1000; /* Ensure buttons appear above the map */
+        }
+        #coordinates {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div id="buttons">
+        <button id="pointBtn">Point Analysis</button>
+        <button id="polygonBtn">Polygon Analysis</button>
+        <button id="districtBtn">District Analysis</button>
+    </div>
+    <div id="map"></div>
+<div id="tooltip"></div>
+
+    <script src='https://unpkg.com/@turf/turf@6/turf.min.js'></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/wellknown@0.5.0/wellknown.min.js"></script>
+    <script src="https://unpkg.com/wellknown@1.0.1/wellknown.js"></script>
+
+    <script>
+        var map = L.map('map').setView([28.3949, 84.1240], 7);
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+         // Display latitude and longitude on mousemove
+         var tooltip = document.getElementById('tooltip');
+
+map.on('mousemove', function(e) {
+    var tooltipX = e.originalEvent.clientX + 10; // Adjust the X position of the tooltip
+    var tooltipY = e.originalEvent.clientY - 20; // Adjust the Y position of the tooltip
+
+    tooltip.style.display = 'block'; // Display the tooltip
+    tooltip.style.left = tooltipX + 'px'; // Set the left position
+    tooltip.style.top = tooltipY + 'px'; // Set the top position
+
+    tooltip.innerHTML = 'Latitude: ' + e.latlng.lat.toFixed(6) + '<br>Longitude: ' + e.latlng.lng.toFixed(6); // Set the content
+});
+
+// Hide the tooltip when mouse leaves the map area
+map.on('mouseout', function() {
+    tooltip.style.display = 'none';
+});
+
+        //display analysis section
+        // Define a function to create and display a popup with statistics and weather data
+        function displayDataPopup(statistics, weatherData) {
+            console.log(statistics);
+            console.log(weatherData);
+            // Create a new div element to contain the popup content
+            var popupDiv = document.createElement('div');
+            popupDiv.classList.add('popup-content');
+
+            // Add a header to the popup
+            var header = document.createElement('h2');
+            header.textContent = 'Statistics and Weather Data';
+            popupDiv.appendChild(header);
+
+            // Add a table to display the statistics data
+            var statisticsTable = document.createElement('table');
+            var statisticsHeaderRow = statisticsTable.insertRow();
+            statisticsHeaderRow.innerHTML = '<th>Soil Property</th><th>Mean</th><th>Median</th><th>Max</th><th>Min</th>';
+
+            // Populate the statistics table with data
+            for (var soilProperty in statistics) {
+                var row = statisticsTable.insertRow();
+                row.innerHTML = '<td>' + soilProperty + '</td><td>' + statistics[soilProperty]['mean'] + '</td><td>' + statistics[soilProperty]['median'] + '</td><td>' + statistics[soilProperty]['max'] + '</td><td>' + statistics[soilProperty]['min'] + '</td>';
+            }
+            popupDiv.appendChild(statisticsTable);
+
+            // Add a table to display the weather data
+            var weatherDataTable = document.createElement('table');
+            var weatherDataHeaderRow = weatherDataTable.insertRow();
+            weatherDataHeaderRow.innerHTML = '<th>Weather Parameter</th><th>Value</th>';
+
+            // Populate the weather data table with data
+            for (var weatherParameter in weatherData) {
+                var row = weatherDataTable.insertRow();
+                row.innerHTML = '<td>' + weatherParameter + '</td><td>' + weatherData[weatherParameter] + '</td>';
+            }
+            popupDiv.appendChild(weatherDataTable);
+
+            // Add a button to close the popup
+            var closeButton = document.createElement('button');
+            closeButton.textContent = 'Close';
+            closeButton.addEventListener('click', function() {
+                map.closePopup();
+            });
+            popupDiv.appendChild(closeButton);
+
+            // Create a Leaflet popup with the popup content
+            L.popup()
+                .setLatLng(map.getCenter())
+                .setContent(popupDiv)
+                .openOn(map);
+        }
+
+        // JavaScript code continued
+        // Define a function to handle polygon analysis response
+        function handlePolygonAnalysisResponse(data) {
+            console.log(data);
+            var message = data.message;
+            var polygon = data.polygon;
+            var statistics = data.statistics;
+            var weather_data = data.weather_data;
+
+            console.log(message);
+            console.log(polygon);
+            console.log(statistics);
+            console.log(weather_data);
+
+            // Display the statistics and weather data in a popup
+            displayDataPopup(statistics, weather_data);
+        }
+        //end display section
+
+        // Variables to store points for polygon analysis
+        var polygonPoints = [];
+        var marker;
+        var drawnPolygon;
+
+        // Array to store Nepal outline coordinates
+        var nepalOutline = [];
+
+        // Fetch the CSV file from Flask backend to get Nepal outline coordinates
+        fetch('/nepal_coordinates.csv')
+            .then(response => response.text())
+            .then(csvData => {
+                // Parse CSV data
+                var lines = csvData.split('\n');
+                for (var i = 1; i < lines.length - 1; i++) { // Start from index 1 to skip the header line
+                    var values = lines[i].split(',');
+                    var lat = parseFloat(values[1]);
+                    var lng = parseFloat(values[0]);
+                    nepalOutline.push([lat, lng]); // Add coordinates to Nepal outline array
+                }
+
+                // Create polygon layer
+                L.polygon(nepalOutline, { color: 'green' }).addTo(map);
+            })
+            .catch(error => console.error('Error fetching CSV:', error));
+
+        // Function to check if a point is inside Nepal
+        function isInsideNepal(latlng) {
+            var point = turf.point([latlng.lat, latlng.lng]);
+            var polygon = turf.polygon([nepalOutline]); // Assuming nepalOutline is a GeoJSON polygon feature
+            var inside = turf.booleanPointInPolygon(point, polygon);
+            return inside;
+        }
+
+        // Function to handle point analysis
+        function handlePointAnalysis() {
+            // Remove all previous markers and polygon lines
+            drawnItems.clearLayers();
+            polygonPoints = [];
+            map.off('click', handlePolygonClick);
+            map.on('click', handlePointClick);
+        }
+
+        // Function to handle polygon analysis
+        function handlePolygonAnalysis() {
+            // Remove all previous markers and polygon lines
+            drawnItems.clearLayers();
+            polygonPoints = [];
+            map.off('click', handlePointClick);
+            map.on('click', handlePolygonClick);
+        }
+
+        // Function to handle click events for point analysis
+        function handlePointClick(e) {
+            var latlng = e.latlng;
+            if (!isInsideNepal(latlng)) {
+                alert("Point is outside Nepal outline. Choose a point within Nepal.");
+                return;
+            }
+
+            var point = {
+                "type": "Point",
+                "coordinates": [latlng.lng, latlng.lat]
+            };
+
+            // Remove previous marker if exists
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            // Create marker at clicked point
+            marker = L.marker(latlng).addTo(map);
+
+            // Send coordinates to Flask backend
+            fetch('/point-analysis', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(point)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+        }
+
+        // Function to handle click events for polygon analysis
+        function handlePolygonClick(e) {
+            var latlng = e.latlng;
+            if (!isInsideNepal(latlng)) {
+                alert("Point is outside Nepal outline. Choose a point within Nepal.");
+                return;
+            }
+
+            // Add clicked point to polygonPoints
+            polygonPoints.push([latlng.lat, latlng.lng]);
+
+            // Create marker at clicked point
+            L.marker(latlng).addTo(drawnItems);
+
+            // Draw lines between points
+            if (polygonPoints.length > 1) {
+                var prevLatLng = polygonPoints[polygonPoints.length - 2];
+                var line = [prevLatLng, [latlng.lat, latlng.lng]];
+                L.polyline(line, {color: 'red'}).addTo(drawnItems);
+            }
+
+            // If polygonPoints is empty or the distance to the first point is less than a certain threshold, close the polygon
+            if (polygonPoints.length > 0 && latlng.distanceTo(polygonPoints[0]) < 500 && polygonPoints.length >= 3) {
+                // Close the polygon
+                polygonPoints.push([polygonPoints[0][0], polygonPoints[0][1]]);
+
+                // Send coordinates to Flask backend
+                fetch('/polygon-analysis', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(polygonPoints) // Stringify the polygonPoints array
+                })
+                .then(response => response.json())
+                .then(response => handlePolygonAnalysisResponse(response)) // Pass the response to the handlePolygonAnalysisResponse function
+                .catch(error => console.error('Error:', error));
+
+                // Remove click event listener for polygon analysis
+                map.off('click', handlePolygonClick);
+            }
+        }
+
+        // Function to handle district analysis
+        function handleDistrictAnalysis() {
+    // Reset map
+    map.removeLayer(drawnItems);
+    drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    // Fetch the CSV file containing district polygons
+    fetch('/district-polygons.csv')
+        .then(response => response.text())
+        .then(csvData => {
+            var lines = csvData.split('\n');
+            for (var i = 1; i < lines.length - 1; i++) {
+                var values = parseCSVLine(lines[i]);
+                var wktGeometry = values[9].replace(/"/g, ''); // Remove all double quotes from the string
+                var districtName = values[3]; // Get the district name
+                var geometry = wellknown.parse(wktGeometry); // Convert WKT to GeoJSON
+
+                // Create district polygon
+                var districtPolygon = L.geoJSON(geometry).addTo(drawnItems);
+                districtPolygon.bindPopup(districtName);
+
+                // Add click event listener to each district polygon
+                districtPolygon.on('click', (function(name, geom) {
+                    return function(e) {
+                        // Prevent the click event from propagating to the map
+                        e.originalEvent.stopPropagation();
+
+                        // Send district name and geometry data to the backend
+                        fetch('/district-analysis', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                districtName: name,
+                                geometry: geom.coordinates
+                            })
+                        })
+                        .then(response => response.json())
+                .then(response => handlePolygonAnalysisResponse(response)) // Pass the response to the handlePolygonAnalysisResponse function
+                .catch(error => console.error('Error:', error));
+                    };
+                })(districtName, geometry));
+            }
+        })
+        .catch(error => console.error('Error fetching district polygons:', error));
+
+    // Add click event listener to the map
+    map.on('click', function(e) {
+    alert('Point does not fall within any district polygon.');
+});
+
+}
+
+        /////
+        function parseCSVLine(line) {
+    var values = [];
+    var isInQuotes = false;
+    var start = 0;
+    for (var i = 0; i < line.length; i++) {
+        if (line[i] === '"') {
+            isInQuotes = !isInQuotes;
+        } else if (line[i] === ',' && !isInQuotes) {
+            values.push(line.substring(start, i));
+            start = i + 1;
+        }
+    }
+    values.push(line.substring(start)); // Add the last value
+    return values;
+}
+
+/////
+
+        // Event listeners for buttons
+        // Event listeners for buttons
+document.getElementById('pointBtn').addEventListener('click', function() {
+    map.off('click');
+    handlePointAnalysis();
+});
+document.getElementById('polygonBtn').addEventListener('click', function() {
+    map.off('click');
+    handlePolygonAnalysis();
+});
+document.getElementById('districtBtn').addEventListener('click', function() {
+    map.off('click');
+    handleDistrictAnalysis();
+});
+
+        // Trigger point analysis by default
+        handlePointAnalysis();
+    </script>
+</body>
+</html>

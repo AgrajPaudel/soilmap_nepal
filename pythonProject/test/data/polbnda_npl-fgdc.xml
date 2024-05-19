@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <idinfo>
+    <citation>
+      <citeinfo>
+        <origin/>
+        <origin/>
+        <pubdate>20160201</pubdate>
+        <title>Districts, Nepal, 2013</title>
+        <edition>2.2</edition>
+        <geoform>vector digital data</geoform>
+        <pubinfo>
+          <publish>International Steering Committee for Global Mapping</publish>
+        </pubinfo>
+        <onlink>http://purl.stanford.edu/zs816cx6985</onlink>
+        <lworkcit>
+          <citeinfo>
+            <title>Global Map</title>
+          </citeinfo>
+        </lworkcit>
+      </citeinfo>
+    </citation>
+    <descript>
+      <abstract>This polygon shapefile represents districts in Nepal. This layer is part of Global Map version 2. The drainage and Transportation layers version 2 are prepared by using the digital 1:1000k data of nepal. The Global Map Nepal version 1.0 Boundaries layer was developed using The Digital Map 200000. Updating the data of version 1.0 using 1:500,000 District Map series and 1:1,000,000 International Map series developed the Global Map Nepal version 1.1 Boundary layer. Updating the Global Map Nepal version 1.1 using 1:1,000,000 Topographic Maps and other information developed the Global Map Nepal version 2.0 Boundary layer, which is corresponding to the merger of municipalities as of April 1, 2010. The Global Map Nepal version 1.0 Population center layer was developed using The 1:1,000,000 Chart International series. Updating the data of version 1.0 using The 1:500,000 District Map series and 1:1,000,000 International Map series developed the Global Map Nepal version 1.1 Population center layer. Updating the Global Map Nepal version 1.1 developed the Global Map Nepal version 2.0 Population center layer, which is corresponding to the merger of municipalities as of April 1, 2010. (Because the built-up area data of the Global Map Nepal is corresponding to the location of each municipality.) </abstract>
+      <purpose>Global Map data were developed under the cooperation of National Geospatial Information Authorities (NGIAs) of respective countries and regions.</purpose>
+      <supplinf>Global Map data of National/Regional version were developed with consistent specifications by NGIAs of respective countries and regions for fundamental geospatial information of their respective coverage by using geospatial information owned by them, and they were provided. The data have been authorized by NGIAs of respective countries and regions. Therefore, the contents of respective data are based on the views of respective data developers. For some countries and regions, there may be parts where data have not been developed. National/Regional version of Global Map data was to be updated in about five-year cycle on the basis of resolutions of an ISCGM meeting. To know about the year data were updated and about data developers, please refer to metadata attached to each data. Depending on the period the data were prepared, they were developed in line with two different specifications, namely, version 1 in VPF and BIL formats, and version 2 in GML and BIL formats.</supplinf>
+    </descript>
+    <timeperd>
+      <timeinfo>
+        <sngdate>
+          <caldate>20130422</caldate>
+        </sngdate>
+      </timeinfo>
+      <current>publication date</current>
+    </timeperd>
+    <status>
+      <progress>Complete</progress>
+      <update>Unknown</update>
+    </status>
+    <spdom>
+      <bounding>
+        <westbc>80.060340</westbc>
+        <eastbc>88.204319</eastbc>
+        <northbc>30.446913</northbc>
+        <southbc>26.348387</southbc>
+      </bounding>
+    </spdom>
+    <keywords>
+      <theme>
+        <themekt>lcsh</themekt>
+        <themekey>Administrative and political divisions</themekey>
+      </theme>
+      <theme>
+        <themekt>ISO 19115 Topic Categories</themekt>
+        <themekey>boundaries</themekey>
+      </theme>
+      <place>
+        <placekt>geonames</placekt>
+        <placekey>Nepal</placekey>
+      </place>
+    </keywords>
+    <accconst>For non-commercial use, in principle, anyone can use the data free of charge. As the data of National/Regional version were developed by NGIAs of respective countries and regions, and there may be parts which have not been developed depending on countries and regions. In using the data, please check respective data policies because different countries and regions have different data policies.</accconst>
+    <useconst>None</useconst>
+    <ptcontac>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Nepal. Nāpīvibhāga</cntorg>
+        </cntorgp>
+        <cntemail>ngiip@dos.gov.np</cntemail>
+      </cntinfo>
+    </ptcontac>
+    <datacred>Global Map of Nepal ©ISCGM/ Survey Department, Nepal</datacred>
+    <native> Version 6.2 (Build 9200) ; Esri ArcGIS 10.4.1.5686</native>
+  </idinfo>
+  <spdoinfo>
+    <direct>Vector</direct>
+    <ptvctinf>
+      <sdtsterm>
+        <sdtstype>GT-polygon composed of chains</sdtstype>
+        <ptvctcnt>75</ptvctcnt>
+      </sdtsterm>
+    </ptvctinf>
+  </spdoinfo>
+  <eainfo>
+    <detailed>
+      <enttyp>
+        <enttypl>polbnda_npl</enttypl>
+      </enttyp>
+      <attr>
+        <attrlabl>FID</attrlabl>
+        <attrdef>Internal feature number.</attrdef>
+        <attrdefs>Esri</attrdefs>
+        <attrdomv>
+          <udom>Sequential unique whole numbers that are automatically generated.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>Shape</attrlabl>
+        <attrdef>Feature geometry.</attrdef>
+        <attrdefs>Esri</attrdefs>
+        <attrdomv>
+          <udom>Coordinates defining the features.</udom>
+        </attrdomv>
+      </attr>
+      <attr>
+        <attrlabl>F_CODE</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>COC</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>NAM</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>LAA</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>POP</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>YPC</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>ADM_CODE</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>SALB</attrlabl>
+      </attr>
+      <attr>
+        <attrlabl>SOC</attrlabl>
+      </attr>
+    </detailed>
+  </eainfo>
+  <distinfo>
+    <distrib>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>Branner Earth Sciences Library</address>
+          <address>Mitchell Building, 2nd Floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </distrib>
+    <distliab>See access and use constraints information.</distliab>
+  </distinfo>
+  <metainfo>
+    <metd>20180525</metd>
+    <metc>
+      <cntinfo>
+        <cntorgp>
+          <cntorg>Stanford Geospatial Center</cntorg>
+        </cntorgp>
+        <cntaddr>
+          <addrtype>physical</addrtype>
+          <address>Branner Earth Sciences Library</address>
+          <address>Mitchell Building, 2nd Floor</address>
+          <address>397 Panama Mall</address>
+          <city>Stanford</city>
+          <state>California</state>
+          <postal>94305</postal>
+          <country>US</country>
+        </cntaddr>
+        <cntvoice>650-723-2746</cntvoice>
+        <cntemail>brannerlibrary@stanford.edu</cntemail>
+      </cntinfo>
+    </metc>
+    <metstdn>FGDC Content Standard for Digital Geospatial Metadata</metstdn>
+    <metstdv>FGDC-STD-001-1998</metstdv>
+    <mettc>local time</mettc>
+  </metainfo>
+</metadata>
